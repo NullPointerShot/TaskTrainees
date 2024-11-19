@@ -1,54 +1,50 @@
 package com.example.myproducts.service;
 
 import com.example.myproducts.models.Product;
+import com.example.myproducts.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Optional;
 
 @Service
 public class ProductService {
 
-    private final Map<Long, Product> productMap = new HashMap<>();
-    private final AtomicLong idCounter = new AtomicLong();
+    private final ProductRepository productRepository;
+
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
     public List<Product> getAllProducts(){
-        return new ArrayList<>(productMap.values());
+        return productRepository.findAll();
     }
 
     public Product getProductById(Long id){
+        return productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product with ID " + id + " not found"));
 
-        Product product = productMap.get(id);
-        if (product == null) {
-            throw new RuntimeException("Product with ID " + id + " not found");
-        }
-        return product;
     }
 
     public Product createProduct(Product product){
-        product.setId(idCounter.incrementAndGet());
-        productMap.put(product.getId(), product);
-        return product;
+        return productRepository.save(product);
     }
 
     public Product updateProduct(Long id, Product product) {
 
-        if (!productMap.containsKey(id)) {
+        if (!productRepository.existsById(id)){
             throw new RuntimeException("Product with ID " + id + " not found");
         }
-
         product.setId(id);
-        productMap.put(id, product);
-        return product;
+        return productRepository.save(product);
     }
 
 
-    public void deleteProductById(Long id){
-        productMap.remove(id);
+    public void deleteProductById(Long id) {
+        if (!productRepository.existsById(id)) {
+            throw new RuntimeException("Product with ID " + id + " not found");
+        }
+        productRepository.deleteById(id);
     }
-
 
 }
