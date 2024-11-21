@@ -27,6 +27,7 @@ public class Product {
     @Column(nullable = false)
     private double price;
 
+
     @Column(nullable = false, columnDefinition = "integer default 0")
     @Min(value = 0, message = "Кол-во товара не может быть меньше 0")
     private int quantity;

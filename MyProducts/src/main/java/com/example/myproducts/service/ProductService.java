@@ -2,6 +2,7 @@ package com.example.myproducts.service;
 
 import com.example.myproducts.models.Product;
 import com.example.myproducts.repository.ProductRepository;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -39,6 +40,7 @@ public class ProductService {
         }
         product.setId(id);
         return productRepository.save(product);
+
     }
 
 
@@ -100,7 +102,5 @@ public class ProductService {
 
         return productRepository.save(product);
     }
-
-
 
 }
