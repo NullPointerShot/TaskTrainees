@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  database:
+    image: postgres:15
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: trainee
+      POSTGRES_PASSWORD: trainee_password
+      POSTGRES_DB: trainee
+    ports:
+      - "5433:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - default
+
+  app:
+    build:
+      context: .
+    container_name: myproducts_app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/trainee
+      SPRING_DATASOURCE_USERNAME: trainee
+      SPRING_DATASOURCE_PASSWORD: trainee_password
+    networks:
+      - default
+
+volumes:
+  db_data: {}
+
+networks:
+  default:
+    driver: bridge

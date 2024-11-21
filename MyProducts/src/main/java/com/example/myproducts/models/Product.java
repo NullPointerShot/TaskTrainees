@@ -2,7 +2,6 @@ package com.example.myproducts.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -28,7 +27,12 @@ public class Product {
     @Column(nullable = false)
     private double price;
 
-    @Column(nullable = false)
+
+    @Column(nullable = false, columnDefinition = "integer default 0")
+    @Min(value = 0, message = "Кол-во товара не может быть меньше 0")
+    private int quantity;
+
+    @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean inStock = false;
 
 }
